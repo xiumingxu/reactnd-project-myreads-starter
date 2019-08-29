@@ -35,6 +35,38 @@ class BooksApp extends React.Component {
   }
 
 
+  onShelfChange = (book, newStatus)=>{
+
+    let newBooks =  this.state.books;
+    let i;
+    for(i in newBooks){
+      if (newBooks[i].id === book.id){
+        break;
+          // todo: change database
+      }
+    }
+    newBooks[i].shelf = newStatus;
+    // newBooks[i].shelf = 
+    // change a parameter of one element in an array
+    console.log('newBooks[i]', newBooks[i]);
+    console.log('newStatus', newStatus);
+
+
+    BooksAPI.update(newBooks[i], newStatus).then(
+
+          (res) => {
+              console.log(res);
+              this.setState({ books: newBooks})
+          }
+
+    )
+  
+    //  console.log('newBooks' , newBooks);
+    //  BooksAPI.getAll().then(
+    //    res=>console.log(res)
+    //  )
+   
+  }
 
   
 
@@ -73,17 +105,11 @@ class BooksApp extends React.Component {
               <h1>MyReads</h1>
             </div>
             <div className="list-books-content">
-              <div>
-                <BookShelf shelfName="Currently Reading" books={currentlyReading} />
-                <BookShelf shelfName="Wanted Reading" books={wantToRead} />
-                <BookShelf shelfName="Read" books={read} />
-                
-               
-              </div>
+                <BookShelf onShelfChange={this.onShelfChange} shelfName="Currently Reading" books={currentlyReading} />
+                <BookShelf onShelfChange={this.onShelfChange} shelfName="Wanted Reading" books={wantToRead} />
+                <BookShelf onShelfChange={this.onShelfChange} shelfName="Read" books={read} />
             </div>
 
-
-            
             <div className="open-search">
               <button onClick={() => this.setState({ showSearchPage: true })}>Add a book</button>
             </div>
